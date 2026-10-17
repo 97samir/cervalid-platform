@@ -409,9 +409,9 @@ Los directorios `frontend`, `backend` y `blockchain` pueden integrarse como subm
 
 ### Repositorios relacionados
 
-- **Frontend:** `https://github.com/TU-USUARIO/cervalid-frontend`
-- **Backend:** `https://github.com/TU-USUARIO/cervalid-backend`
-- **Blockchain:** `https://github.com/TU-USUARIO/cervalid-blockchain`
+- **Frontend:** `https://github.com/97samir/cervalid-frontend`
+- **Backend:** `https://github.com/97samir/cervalid-backend`
+- **Blockchain:** `https://github.com/97samir/cervalid-blockchain`
 
 Sustituye las URL de ejemplo por las direcciones reales cuando los repositorios estén publicados.
 

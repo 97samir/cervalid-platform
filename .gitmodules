@@ -1,0 +1,11 @@
+[submodule "frontend"]
+    path = frontend
+    url = https://github.com/97samir/cervalid-frontend.git
+
+[submodule "backend"]
+    path = backend
+    url = https://github.com/97samir/cervalid-backend.git
+
+[submodule "blockchain"]
+    path = blockchain
+    url = https://github.com/97samir/cervalid-blockchain.git

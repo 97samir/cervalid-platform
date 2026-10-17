@@ -1,0 +1,110 @@
+services:
+  cervalid-postgres:
+    image: postgres:16-alpine
+    container_name: cervalid-postgres
+    environment:
+      POSTGRES_DB: cervalidDb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d cervalidDb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  cervalid-anvil:
+    image: ghcr.io/foundry-rs/foundry:latest
+    container_name: cervalid-anvil
+    entrypoint: ["anvil"]
+    command:
+      - "--host"
+      - "0.0.0.0"
+      - "--chain-id"
+      - "31337"
+      - "--state"
+      - "/data/cervalid-state.json"
+      - "--state-interval"
+      - "10"
+    ports:
+      - "8545:8545"
+    volumes:
+      - anvil_data:/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "cast chain-id --rpc-url http://127.0.0.1:8545 | grep -q 31337"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  cervalid-contract-init:
+    image: cervalid-contract-init:local
+    container_name: cervalid-contract-init
+    env_file:
+      - ./backend/.env.docker
+    environment:
+      BLOCKCHAIN_RPC_URL: http://cervalid-anvil:8545
+      BLOCKCHAIN_CONFIG_OUTPUT: /shared/blockchain.properties
+    volumes:
+      - blockchain_config:/shared
+    depends_on:
+      cervalid-anvil:
+        condition: service_healthy
+    restart: "no"
+
+  cervalid-api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    image: cervalid-api:local
+    container_name: cervalid-api
+    env_file:
+      - ./backend/.env.docker
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SERVER_PORT: "8081"
+      DB_HOST: cervalid-postgres
+      DB_PORT: "5432"
+      DB_NAME: cervalidDb
+      DB_USER: postgres
+      DB_PASSWORD: admin
+      FRONTEND_URL: http://localhost:5173
+      BLOCKCHAIN_RPC_URL: http://cervalid-anvil:8545
+      SPRING_CONFIG_IMPORT: optional:file:/shared/blockchain.properties
+    ports:
+      - "8081:8081"
+    volumes:
+      - blockchain_config:/shared:ro
+    depends_on:
+      cervalid-postgres:
+        condition: service_healthy
+      cervalid-contract-init:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  cervalid-frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        VITE_API_URL: http://localhost:8081
+    image: cervalid-frontend:local
+    container_name: cervalid-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - cervalid-api
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  anvil_data:
+  blockchain_config:

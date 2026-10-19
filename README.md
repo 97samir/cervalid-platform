@@ -297,29 +297,57 @@ El backend utiliza el puerto `8081` en la configuración actual. Revisa los perf
 
 ### Blockchain
 
-Desde el directorio `blockchain`, instala las dependencias:
+El componente blockchain utiliza Solidity, Hardhat y Anvil para compilar, desplegar y probar los contratos inteligentes de Cervalid.
+
+#### 1. Instalar las dependencias
+
+Desde la carpeta `blockchain`, ejecuta:
 
 ```bash
 npm ci
 ```
 
-Compila los contratos con la versión de Hardhat configurada en el proyecto:
+#### 2. Compilar los contratos
 
 ```bash
 npx hardhat compile
 ```
 
-Inicia Anvil en una terminal independiente, utilizando la configuración y el estado que correspondan a tu entorno de desarrollo.
+#### 3. Iniciar Anvil con persistencia local
 
-Después configura el RPC y la clave de la cuenta de pruebas para ejecutar el script de despliegue:
+Abre una terminal **WSL** y sitúate en la carpeta `blockchain` del proyecto. Ejecuta:
+
+```bash
+mkdir -p data
+anvil --state ./data/cervalid-state.json --state-interval 30
+```
+
+- `mkdir -p data` crea el directorio de persistencia si todavía no existe.
+- `anvil` inicia una blockchain local para desarrollo y pruebas.
+- `--state ./data/cervalid-state.json` indica dónde guardar y recuperar el estado de la blockchain.
+- `--state-interval 30` configura el guardado periódico del estado cada 30 segundos.
+
+**Importante:** mantén esta terminal abierta mientras utilices la blockchain. En el primer inicio, Anvil creará una blockchain nueva. En los siguientes inicios, podrá recuperar el estado guardado si el archivo sigue disponible.
+
+El directorio `data/` contiene información local de desarrollo y no debe publicarse en GitHub. Por ello, está excluido mediante la regla `data/` en `blockchain/.gitignore`. Al clonar el repositorio, no necesitas descargar esta carpeta: el comando `mkdir -p data` la crea automáticamente.
+
+#### 4. Desplegar el contrato inteligente
+
+Con Anvil ejecutándose, abre una segunda terminal WSL y vuelve a la carpeta `blockchain`.
+
+Configura las variables de entorno requeridas por el script de despliegue, incluyendo `BLOCKCHAIN_RPC_URL` y `BLOCKCHAIN_PRIVATE_KEY`, utilizando una cuenta de pruebas de Anvil.
+
+Después, ejecuta:
 
 ```bash
 node scripts/deploy.js
 ```
 
-El script requiere que `BLOCKCHAIN_RPC_URL` y `BLOCKCHAIN_PRIVATE_KEY` estén configuradas. Si no se proporciona una dirección válida de contrato existente, el proceso despliega el contrato y muestra la dirección resultante.
+El script despliega el contrato cuando corresponde y muestra la dirección resultante. Si el entorno utiliza una dirección de contrato compartida con el backend, asegúrate de que la configuración se actualice correctamente.
 
-No ejecutes simultáneamente una instancia local y otra en Docker utilizando el mismo puerto del host.
+**Nota:** si empiezas con una blockchain nueva, tendrás que desplegar nuevamente el contrato y configurar su nueva dirección en el backend. No reutilices las claves de las cuentas de prueba en producción.
+
+No ejecutes simultáneamente una instancia local y otra en Docker utilizando el mismo puerto del host. Si utilizas Docker Compose para levantar todo Cervalid, sigue el procedimiento de instalación con Docker en lugar de iniciar Anvil manualmente.
 
 ## Servicios y puertos
 

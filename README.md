@@ -6,7 +6,7 @@
 
 Su propuesta de valor consiste en ofrecer trazabilidad del recorrido académico para que las instituciones puedan respaldar las credenciales emitidas y los empleadores puedan consultar su validez de manera sencilla.
 
-[Características](#-características-principales) · [Arquitectura](#-arquitectura) · [Instalación](#-instalación-con-docker-recomendada) · [Desarrollo local](#-ejecución-en-modo-desarrollo-local) · [Documentación](#-documentación)
+[Características](#características-principales) · [Arquitectura](#arquitectura) · [Instalación](#instalación-con-docker-recomendada) · [Desarrollo local](#ejecución-en-modo-desarrollo-local) · [Documentación](#documentación)
 
 ---
 
@@ -533,9 +533,9 @@ Para cambios que involucren varios componentes, documenta los requisitos de comp
 
 ## Licencia
 
-La licencia de Cervalid debe indicarse aquí cuando se haya definido formalmente.
+Copyright 2025-2026 © Cervalid. Todos los derechos reservados.
 
-Si el repositorio todavía no incluye una licencia, no asumas que terceros tienen autorización para reutilizar, modificar o distribuir el código. Añade un archivo `LICENSE` con los términos elegidos antes de publicar una licencia explícita para el proyecto.
+Términos y condiciones `LICENSE`.
 
 ---
 

@@ -12,7 +12,7 @@ Su propuesta de valor consiste en ofrecer trazabilidad del recorrido académico 
 
 ## Índice
 
-- [Descripción del proyecto](#-descripción-del-proyecto)
+- [Descripción del proyecto](#descripción-del-proyecto)
 - [Características principales](#-características-principales)
 - [Arquitectura](#-arquitectura)
 - [Tecnologías](#-tecnologías)

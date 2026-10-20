@@ -79,6 +79,9 @@ services:
       FRONTEND_URL: http://localhost:5173
       BLOCKCHAIN_RPC_URL: http://cervalid-anvil:8545
       SPRING_CONFIG_IMPORT: optional:file:/shared/blockchain.properties
+      CERVALID_DEMO_ENABLED: true
+      CERVALID_DEMO_PASSWORD: "123456"
+
     ports:
       - "8081:8081"
     volumes:
